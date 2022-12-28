@@ -9,10 +9,42 @@
     <dl>
         <dt>Tabriz </dt>
         <dd> Tabriz is best city in Iran </dd>
-        </dl>
+    </dl>
 
 
-        <marquee loop="infinite" bgcolor="red" width="20%">
-            <h1> Welcome to Tabriz </h1>
-            </marquee>
+    <marquee loop="infinite" bgcolor="red" width="20%">
+        <h1> Welcome to Tabriz </h1>
+    </marquee>
+
+
+    <form>
+        <input type="radio" name="r1">
+    </form>
+    
+
+
+    <form>
+        <textarea> </textarea>
+    </form>
+        
+
+    <form action="result.asp" onsubmit="alert('onSubmit')" onreset="alert('onReset')">
+        Your Name:
+         <input type="text" onfocus="alert('onFocus')" onblur="alert('onBlur')"><br>
+        <textarea onSelect="alert('onSelect')">onselect</textarea><br>
+        <input type="reset" name="reset" value="Reset">
+        <input type="submit" name="Submit" value="Submit">
+    </form>
+
+
+
+    <script language="javascript" type="text/javascript">
+        function delta(a,b,c)
+        {
+        return a*b*c;
+        }
+    </script>
+    <input type="button" onclick="document.write(delta(2,3,4))" value="Display a confirm box" />
+
+    
 </body>
