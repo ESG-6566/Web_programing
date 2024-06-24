@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Option Menu</title>
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-container{
+            width: 500px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding-top: 7%;
+
+            img{
+                cursor: pointer;
+                /* width: 500px; */
+                max-width: 10%;
+                max-height: 10%;
+                min-width: 24px;
+                min-height: 24px;
+                width: auto;
+                height: auto;
+                border-radius: 30%;
+            }
+
+            img.selected {
+                opacity: 1;
+                filter: invert(39%) sepia(87%) saturate(5598%) hue-rotate(343deg) brightness(101%) contrast(102%);
+            }
+            img:hover {
+                transform: scale(1.1);
+                /* filter: brightness(0.7); */
+                /* background-color: #c9c9c9; */
+            }
+        }
+        .space{
+            width: 100%;
+            height: 100%;
+        }
+        .space2{
+            width: 20%;
+            height: 100%;
+        }
+
+        .indicator-container{
+            position: relative;
+            width: 100%;
+            height: 20px;
+            min-height: 20px;
+            overflow: hidden;
+
+            .indicator {
+                width: 100%;
+                height: 8px;
+                min-height: 8px;
+                transition: all 0.3s ease;
+                overflow: hidden;
+                position: absolute;
+                bottom: 0;
+                
+                .rectangle {
+                    width: 100%; /* Full width of the rectangle */
+                    height: 100%;
+                    background-color: #ff5722;
+                    top: 50%;
+                    position: relative;
+                    border-radius: 5px 5px 0 0;
+                }
+            }
+            
+            .line {
+                background-color: #E5E5E5;
+                height: 2px;
+                width: 100%;
+                min-height: 1px;
+                position: absolute;
+                bottom: 0;
+            }
+        }
+        @media screen and (max-width: 600px) {
+            nav{
+                padding-top: 0%;
+
+                img{
+                    min-width: 25px;
+                    min-height: 25px;
+                }
+            }
+            .indicator-container{
+                height: 20px;
+                min-height: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <nav>
+            <div class="space2"></div>
+            <img src="assets/Icons/category-2.png"></img>
+            <div class="space"></div>
+            <img src="assets/Icons/user-octagon.png"></img>
+            <div class="space"></div>
+            <img src="assets/Icons/profile-2user.png"></img>
+            <div class="space"></div>
+            <img src="assets/Icons/receipt-minus.png"></img>
+            <div class="space"></div>
+            <img src="assets/Icons/status.png"></img>
+            <div class="space2"></div>
+        </nav>
+        <div class="space"></div>
+        <div class="indicator-container">
+            <div class="line"></div>
+            <div class="indicator">
+                <div class="rectangle"></div>    
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = document.querySelectorAll('nav img');
+            const indicator = document.querySelector('.indicator');
+
+            
+            
+            highlightSelected(0);
+            menuItems[0].classList.add('selected');
+            moveIndicator(menuItems[0]);
+            
+
+            function moveIndicator(element) {
+                const itemWidth = element.offsetWidth;
+                const itemLeft = element.offsetLeft;
+                indicator.style.width = `${itemWidth}px`;
+                indicator.style.transform = `translateX(${itemLeft}px)`;
+            }
+
+            // Set the initial selected item and indicator position
+            const selectedItem = document.querySelector('nav img.selected');
+            if (selectedItem) {
+                moveIndicator(selectedItem);
+            }
+
+            menuItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    highlightSelected(index)
+                    // Move the indicator to the clicked item
+                    moveIndicator(item);
+                });
+            });
+
+            function highlightSelected(index){
+                // Remove 'selsected' class from all items
+                menuItems.forEach((img) => img.classList.remove('selected'));
+                    
+                // Add 'selected' class to the clicked item
+                menuItems[index].classList.add('selected');
+            }
+
+            // Adjust indicator on window resize
+            window.addEventListener('resize', () => {
+                const selectedItem = document.querySelector('nav img.selected');
+                if (selectedItem) {
+                    moveIndicator(selectedItem);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
