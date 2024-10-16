@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat Input Test</title>
+    <style>
+        @font-face {
+            font-family: "IRANSans";
+            font-style: normal;
+            font-weight: 300;
+            src: url("./Fonts/IRANSans/IRANSans.eot");
+            src: url("./Fonts/IRANSans/IRANSans.eot?#iefix") format("embedded-opentype"),
+                url("./Fonts/IRANSans/IRANSans.woff2") format("x-woff2"),
+                url("./Fonts/IRANSans/IRANSans.woff") format("woff"),
+                url("./Fonts/IRANSans/IRANSans.ttf") format("truetype");
+        }
+
+        * {
+            font-family: 'IRANSans';
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+            background-color: white;
+            grid-gap: 8px;
+        }
+
+        ims-chat-input {
+            width: 50%;
+            height: fit-content;
+            margin-block-end: 60px;
+        }
+
+        ims-message {
+            width: 100%;
+            height: fit-content;
+        }
+    </style>
+    <script src="./Kernel/Message.js"></script>
+</head>
+
+<body>
+
+    <div class="message-container"></div>
+    <ims-chat-input data-binding="Chat-Input" data-field="chat-input"></ims-chat-input>
+
+    <script>
+        class ChatInput extends HTMLElement {
+
+            #inputDiv
+
+            constructor() {
+                super();
+                const shadow = this.attachShadow({ mode: 'open' });
+
+                shadow.innerHTML = `
+                <link rel="stylesheet" type="text/css" href="./css/ChatInput.css" />
+                <div class="main-container">
+                    <button class="plus-button">
+                        <img src="./Assets/add-circle.png" />
+                    </button>
+                    <div class="input-container">
+                        <div class="input-message-input scrollable scrollable-y i18n" 
+                            dir="rtl" 
+                            contenteditable="true" 
+                            data-placeholder="اینجا بنویسید ...."></div>
+                    </div>
+                    <div class="send-button">
+                        <span>ارسال</span>
+                        <img class="arrow" src="./Assets/Arrow - Up.png" />
+                    </div>
+                    <div class="shimmer"></div>
+                </div>
+            `;
+
+                this.#initializeElements();
+
+                this.#inputDiv.addEventListener('input', () => {
+                    this.#inputDiv.style.height = 'auto';
+                    let newHeight = Math.min(this.#inputDiv.scrollHeight, 200);
+                    this.#inputDiv.style.height = `${newHeight}px`;
+
+                    if (this.scrollHeight > 200) {
+                        this.#inputDiv.style.overflowY = 'auto';
+                    } else {
+                        this.#inputDiv.style.overflowY = 'none';
+                    }
+                });
+
+                this.#inputDiv.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        if (event.shiftKey) return;
+                        event.preventDefault();
+                        if (this.#inputDiv.innerHTML) {
+                            this.handleSendMessage(this.#inputDiv.innerHTML);
+                            this.clearInput();
+                            this.#inputDiv.style.height = 'auto';
+                        }
+                    }
+                });
+
+                shadow.querySelector(".send-button").addEventListener('click', () => {
+                    if (this.#inputDiv.innerHTML) {
+                        this.handleSendMessage(this.#inputDiv.innerHTML);
+                    }
+                });
+
+                this.hideShimmer();
+            }
+
+            #initializeElements() {
+                this.#inputDiv = this.shadowRoot.querySelector('.input-message-input');
+            }
+
+            hideShimmer() {
+                const shimmer = this.shadowRoot.querySelector(".shimmer");
+                shimmer.style.display = 'none';
+            }
+
+            showShimmer() {
+                const shimmer = this.shadowRoot.querySelector(".shimmer");
+                shimmer.style.display = 'block';
+            }
+
+            clearInput() {
+                this.#inputDiv.innerHTML = '';
+                this.#inputDiv.style.height = 'auto';
+            }
+
+            handleSendMessage(message) {
+                console.log(message);
+            }
+        }
+
+        customElements.define("ims-chat-input", ChatInput);
+
+        const chatInput = document.querySelector("ims-chat-input");
+        const messageContainer = document.querySelector(".message-container");
+
+        chatInput.handleSendMessage = (message) => {
+            const newMessage = document.createElement('ims-message');
+            newMessage.setProperties(message);
+            messageContainer.appendChild(newMessage);
+        };
+    </script>
+
+</body>
+
+</html>
